@@ -3,21 +3,17 @@
 public class SpecsCalculator
 {
     private readonly double _plankWidth;
-    private readonly double _minHeight;
-    private readonly double _maxHeight;
 
-    public SpecsCalculator(double plankWidth, double minHeight, double maxHeight)
+    public SpecsCalculator(double plankWidth)
     {
-        _maxHeight = maxHeight;
-        _minHeight = minHeight;
         _plankWidth = plankWidth;
     }
     
-    public Specs CalculateSpecs(int length, double price, double diameter, double width)
+    public Specs CalculateSpecs(int length, double price, double diameter, double width, double minHeight, double maxHeight)
     {
         PlankLayout.Length = length;
     
-        var calculator = new PlankLengthCalculator(_plankWidth, _minHeight, _maxHeight);
+        var calculator = new PlankLengthCalculator(_plankWidth, minHeight, maxHeight);
         var planks = calculator.CalculateLengths(diameter)
             .Concat(calculator.CalculateLengths(diameter + width))
             .Select(x => x + 0.5)
@@ -54,6 +50,6 @@ public class SpecsCalculator
             //Console.WriteLine($"{i}: {Math.Round(layout.Remainder, 2):f2}\t + {string.Join(", ", layout.Planks)}");
         }
     
-        return new Specs(diameter, width, layouts.Count, price, length, Math.Round(layouts.Count * price, 2));
+        return new Specs(diameter, width, layouts.Count, length, Math.Round(layouts.Count * price, 2), minHeight, maxHeight);
     }
 }
